@@ -1,5 +1,5 @@
 \documentclass[a4paper,onecolumn,oneside,11pt,english,bibliography=totoc]{article}
-\usepackage[a4paper,left=25mm,right=25mm,top=25mm,bottom=20mm,marginpar=20mm]{geometry}
+\usepackage[a4paper,left=25mm,right=25mm,top=20mm,bottom=20mm,marginpar=20mm]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage{babel}
 \usepackage[T1]{fontenc}
@@ -176,7 +176,7 @@
 \begin{document}
 	\maketitle
 	\section*{Experimental Setup}
-	We trained an MobileNet-v2 with 10 classes on the first fold of the STL-10 dataset, using a LogSoftmax output, together with a negative log likelihood loss. This first fold of data only consists of $1000$ labeled examples ($100$ per class). This model is then used to gather more training data from the $100 000$ unlabeled images. This is done by using the models predictions as soft labels. Now, these labels are not perfect in any way; in fact, we expect them to be wrong for a lot of pictures. However, we can filter out the good labels by considering the models confidence in its prediction. This is especially important in this case, as the unlabeled images come from a different distribution that even has more classes then the training examples. To create a balanced dataset from these soft-labeled examples, for each class we take the $1000$ images that are soft-labeled as that class by the original model. These images are chosen on highest maximum of the LogSoftmax/Softmax output, as a measure of model confidence. The reason for this is that for these images, the model is confident in its prediction, making it likely that the prediction is actually correct, while the unlabeled images, that are not in nay of the original classes are likely to get a low score, since the model has not seen similar images before, making the output essentially random. We then take this new dataset of $10000$ images to train a new model (with the same architecture) and compare the results of both models on STL-10s test set.
+	We trained a MobileNet-v2 with 10 classes on the first fold of the STL-10 dataset, using a LogSoftmax output, together with a negative log likelihood loss. This first fold of data only consists of $1000$ labeled examples ($100$ for each of the $10$ classes). This model is then used to gather more training data from the $100 000$ unlabeled images. This is done by using the models predictions as soft labels. Now, these labels are not perfect in any way; in fact, we expect them to be wrong for a lot of pictures. However, we can filter out the good labels by considering the models confidence in its prediction. This is especially important in this case, as the unlabeled images come from a different distribution that even has more classes then the training examples. To create a balanced dataset from these soft-labeled examples, for each class we take $1000$ images that are soft-labeled as that class by the original model. These images are chosen on highest maximum of the LogSoftmax/Softmax output, as a measure of model confidence. The reason for this is that for these images, the model is confident in its prediction, making it likely that the prediction is actually correct, while the unlabeled images, that are not in any of the original classes are likely to get a low score, since the model has not seen similar images before, making the output essentially random. We then take this new dataset of $10000$ images to train a new model (with the same architecture) and compare the resulting models on the STL-10 test set.
 	
 	\section*{Results}
 	\begin{figure}[h]
@@ -198,7 +198,7 @@
 	    \label{tab:soft_dataset_stats}
 	\end{table}
 	
-	When training the first model, the training (top-1) accuracy quickly surges to over 95\% (as seen in \cref{fig:training_prior}) and tops out at 100\%. This is expected, as the model can quickly overfit to the training data. On generation of the new dataset from the unlabeled images, the minimum confidence in any of the classes still was $1.0$, i.e. the model was sure in its predictions of all of these images.
+	When training the first model, the training (top-1) accuracy quickly surges to over 95\% (as seen in \Cref{fig:training_prior}) and tops out at 100\%. This is expected, as the model can quickly overfit to the training data. On generation of the new dataset from the unlabeled images, the minimum confidence in any of the classes still was $1.0$, i.e. the model was sure in its predictions of all of these images.
 	
 	\begin{figure}[h]
 	    \centering
